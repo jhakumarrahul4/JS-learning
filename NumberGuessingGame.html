@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Number Guessing Game</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Number Guessing Game</h1>
+      <label for="difficulty">Choose Dificulty:</label>
+      <select id="difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+
+      <input type="text" id="userGuess" placeholder="enter your guess" />
+      <div class="buttons">
+        <button type="button" id="button">Guess</button>
+        <button type="button" id="newGame">New Game</button>
+      </div>
+
+      <p id="display"></p>
+      <p id="attempts"></p>
+      <p id="score"></p>
+    </div>
+  </body>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 18px;
+      margin: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    #display {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    select {
+      margin-bottom: 10px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 25px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <script>
+    let max = 0;
+    let difficulty = document.getElementById("difficulty").value;
+    switch (difficulty) {
+      case "easy":
+        max = 50;
+        break;
+      case "medium":
+        max = 100;
+        break;
+      case "hard":
+        max = 500;
+        break;
+      default:
+        break;
+    }
+
+    let computerNumber = Math.floor(Math.random() * max) + 1;
+    let display = document.getElementById("display");
+    let attempts = 0;
+    let score = 0;
+    let attemptsDisplay = document.getElementById("attempts");
+    let button = document.getElementById("button");
+    let newGameButton = document.getElementById("newGame");
+    let gameActive = true;
+    let scoreDisplay = document.getElementById("score");
+    let userInput = document.getElementById("userGuess");
+
+    button.addEventListener("click", function () {
+      if (!gameActive) {
+        display.textContent = "Game over! Click New Game";
+        return;
+      }
+
+      let inputValue = userInput.value;
+      if (inputValue === "") {
+        display.textContent = "Please enter a number";
+        return;
+      }
+
+      let userGuess = Number(inputValue);
+
+      if (userGuess < 1 || userGuess > max) {
+        display.textContent = "Please enter a number between 1 and " + max;
+        return;
+      }
+
+      attempts += 1;
+      attemptsDisplay.textContent = "Attempts: " + attempts;
+
+      if (userGuess > computerNumber) {
+        display.textContent = "Too High!";
+      } else if (userGuess < computerNumber) {
+        display.textContent = "Too Low!";
+      } else {
+        display.textContent = "Correct!";
+        gameActive = false;
+        score = Math.max(100 - (attempts - 1) * 10, 10);
+        scoreDisplay.textContent = "Score: " + score;
+      }
+    });
+
+    newGameButton.addEventListener("click", function () {
+      let difficulty = document.getElementById("difficulty").value;
+      switch (difficulty) {
+        case "easy":
+          max = 50;
+          break;
+        case "medium":
+          max = 100;
+          break;
+        case "hard":
+          max = 500;
+          break;
+        default:
+          break;
+      }
+
+      let computerNumber = Math.floor(Math.random() * max) + 1;
+      attempts = 0;
+      score = 0;
+      gameActive = false;
+
+      userInput.value = "";
+      display.textContent = "";
+      attemptsDisplay.textContent = "";
+      scoreDisplay.textContent = "";
+    });
+    let difficultySelect = document.getElementById("difficulty");
+    difficultySelect.addEventListener("change", function () {
+      difficulty = difficultySelect.value;
+
+      switch (difficulty) {
+        case "easy":
+          max = 50;
+          break;
+
+        case "medium":
+          max = 100;
+          break;
+
+        case "hard":
+          max = 500;
+          break;
+      }
+
+      computerNumber = Math.floor(Math.random() * max) + 1;
+
+      attempts = 0;
+      score = 0;
+      gameActive = true;
+
+      userInput.value = "";
+      display.textContent = "";
+      attemptsDisplay.textContent = "";
+      scoreDisplay.textContent = "";
+    });
+  </script>
+</html>
