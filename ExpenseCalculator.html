@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Expense Manager</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 30px;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: auto;
+        background-color: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      input,
+      button {
+        padding: 10px;
+        margin: 5px 0;
+        box-sizing: border-box;
+      }
+
+      input {
+        width: 100%;
+      }
+
+      button {
+        cursor: pointer;
+        width: 100%;
+      }
+
+      .summary {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+      }
+
+      .summary p {
+        font-size: 18px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+
+      <h1>Expense Manager</h1>
+
+      <h2>Add Expense</h2>
+
+      <input
+        type="text"
+        id="category"
+        placeholder="Enter category"
+      />
+
+      <input
+        type="number"
+        id="amount"
+        placeholder="Enter amount"
+      />
+
+      <button type="button" id="addButton">
+        Add Expense
+      </button>
+
+      <p id="message"></p>
+
+      <div class="summary">
+
+        <h2>Expense Summary</h2>
+
+        <p id="total">Total: ₹0</p>
+
+        <p id="average">Average: ₹0</p>
+
+        <p id="highest">Highest: -</p>
+
+        <p id="monthly">Monthly Expense: ₹0</p>
+
+        <p id="yearly">Yearly Expense: ₹0</p>
+
+      </div>
+
+      <div class="summary">
+
+        <h2>Savings</h2>
+
+        <input
+          type="number"
+          id="income"
+          placeholder="Enter monthly income"
+        />
+
+        <button type="button" id="savingsButton">
+          Calculate Savings
+        </button>
+
+        <p id="savings">Savings: ₹0</p>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      let expenses = [
+        { category: "Food", amount: 500 },
+        { category: "Travel", amount: 300 },
+        { category: "Shopping", amount: 1200 }
+      ];
+
+      function addExpense(category, amount) {
+
+        let expense = {
+          category: category,
+          amount: amount
+        };
+
+        expenses.push(expense);
+    }
+
+      function calculateTotal(expenses) {
+
+        let total = 0;
+
+        for (let i = 0; i < expenses.length; i++) {
+
+          total += expenses[i].amount;
+
+        }
+
+        return total;
+      }
+
+      function calculateAverage(expenses) {
+
+        if (expenses.length === 0) {
+          return 0;
+        }
+
+        let total = calculateTotal(expenses);
+
+        return total / expenses.length;
+      }
+
+      function findHighestExpense(expenses) {
+
+        if (expenses.length === 0) {
+          return "-";
+        }
+
+        let highest = expenses[0];
+
+        for (let i = 1; i < expenses.length; i++) {
+
+          if (expenses[i].amount > highest.amount) {
+            highest = expenses[i];
+          }
+
+        }
+
+        return highest.category;
+      }
+
+      function monthlyExpense(expenses) {
+
+        let monthlyTotal = calculateTotal(expenses);
+
+        return monthlyTotal;
+      }
+
+      function yearlyExpense(expenses) {
+
+        let monthlyTotal = monthlyExpense(expenses);
+
+        return monthlyTotal * 12;
+      }
+
+
+      function calculateSavings(monthlyIncome, expenses) {
+
+        let expense = monthlyExpense(expenses);
+
+        return monthlyIncome - expense;
+      }
+
+      let categoryInput = document.getElementById("category");
+
+      let amountInput = document.getElementById("amount");
+
+      let addButton = document.getElementById("addButton");
+
+      let message = document.getElementById("message");
+
+      let totalDisplay = document.getElementById("total");
+
+      let averageDisplay = document.getElementById("average");
+
+      let highestDisplay = document.getElementById("highest");
+
+      let monthlyDisplay = document.getElementById("monthly");
+
+      let yearlyDisplay = document.getElementById("yearly");
+
+      let incomeInput = document.getElementById("income");
+
+      let savingsButton = document.getElementById("savingsButton");
+
+      let savingsDisplay = document.getElementById("savings");
+
+
+      function displaySummary() {
+
+        let total = calculateTotal(expenses);
+
+        let average = calculateAverage(expenses);
+
+        let highest = findHighestExpense(expenses);
+
+        let monthly = monthlyExpense(expenses);
+
+        let yearly = yearlyExpense(expenses);
+
+
+        totalDisplay.textContent = "Total: ₹" + total;
+
+        averageDisplay.textContent =
+          "Average: ₹" + average.toFixed(2);
+
+        highestDisplay.textContent =
+          "Highest: " + highest;
+
+        monthlyDisplay.textContent =
+          "Monthly Expense: ₹" + monthly;
+
+        yearlyDisplay.textContent =
+          "Yearly Expense: ₹" + yearly;
+      }
+
+      addButton.addEventListener("click", function () {
+
+        let category = categoryInput.value;
+
+        let amount = Number(amountInput.value);
+
+
+        if (category === "" || amount <= 0) {
+
+          message.textContent =
+            "Please enter a valid category and amount.";
+
+          return;
+        }
+
+
+        addExpense(category, amount);
+
+
+        message.textContent =
+          "Expense added successfully!";
+
+
+        categoryInput.value = "";
+
+        amountInput.value = "";
+
+
+        displaySummary();
+
+      });
+
+ 
+      savingsButton.addEventListener("click", function () {
+
+        let income = Number(incomeInput.value);
+
+
+        if (income <= 0) {
+
+          savingsDisplay.textContent =
+            "Please enter a valid income.";
+
+          return;
+        }
+
+
+        let savings = calculateSavings(income, expenses);
+
+
+        savingsDisplay.textContent =
+          "Savings: ₹" + savings;
+
+      });
+
+      displaySummary();
+
+    </script>
+  </body>
+</html>
