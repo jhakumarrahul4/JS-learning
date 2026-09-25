@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Student Management System</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+
+    /* Cards */
+
+    .card {
+      background: white;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card h2 {
+      margin-bottom: 20px;
+      color: #374151;
+    }
+
+    /* Form */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      margin-bottom: 7px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    .input-group input {
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .input-group input:focus {
+      border-color: #2563eb;
+    }
+
+    /* Buttons */
+
+    .btn {
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .add-btn {
+      background: #2563eb;
+    }
+
+    .delete-btn {
+      background: #dc2626;
+    }
+
+    .find-btn {
+      background: #16a34a;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Table */
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    td {
+      color: #4b5563;
+    }
+
+    /* Statistics */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 25px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-card h3 {
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .stat-card p {
+      font-size: 28px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <h1>Student Management System</h1>
+      <p class="subtitle">Add, update, find and delete student records</p>
+
+      <!-- Add Student -->
+      <div class="card">
+        <h2>Add Student</h2>
+
+        <div class="form-grid">
+          <div class="input-group">
+            <label for="studentId">Student ID</label>
+            <input
+              type="number"
+              id="studentId"
+              placeholder="Enter student ID"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="studentName">Name</label>
+            <input
+              type="text"
+              id="studentName"
+              placeholder="Enter student name"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="studentMarks">Marks</label>
+            <input type="number" id="studentMarks" placeholder="Enter marks" />
+          </div>
+
+          <div class="input-group">
+            <label for="studentBranch">Branch</label>
+            <input type="text" id="studentBranch" placeholder="Enter branch" />
+          </div>
+        </div>
+
+        <button class="btn add-btn" type="button">Add Student</button>
+      </div>
+
+      <!-- Delete Student -->
+      <div class="card">
+        <h2>Delete Student</h2>
+
+        <div class="input-group">
+          <label for="deleteId">Student ID</label>
+          <input type="number" id="deleteId" placeholder="Enter student ID" />
+        </div>
+
+        <button class="btn delete-btn" type="button">Delete Student</button>
+      </div>
+
+      <!-- Find Student -->
+      <div class="card">
+        <h2>Find Student</h2>
+
+        <div class="input-group">
+          <label for="searchName">Student Name</label>
+          <input type="text" id="searchName" placeholder="Enter student name" />
+        </div>
+
+        <button class="btn find-btn" type="button">Find Student</button>
+      </div>
+
+      <!-- Student List -->
+      <div class="card">
+        <h2>Student Records</h2>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Marks</th>
+                <th>Branch</th>
+              </tr>
+            </thead>
+
+            <tbody id="studentTable">
+              <!-- Students will be added here using JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="stats">
+        <div class="stat-card">
+          <h3>Total Students</h3>
+          <p id="totalStudents">0</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Average Marks</h3>
+          <p id="averageMarks">0</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Topper</h3>
+          <p id="topper">-</p>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    let students = [];
+
+    // Add Student
+    function addStudent() {
+      let id = Number(document.getElementById("studentId").value);
+      let name = document.getElementById("studentName").value;
+      let marks = Number(document.getElementById("studentMarks").value);
+      let branch = document.getElementById("studentBranch").value;
+
+      // Check empty fields
+      if (id === 0 || name === "" || marks === 0 || branch === "") {
+        alert("Please fill all fields");
+        return;
+      }
+
+      // Create student object
+      let student = {
+        id: id,
+        name: name,
+        marks: marks,
+        branch: branch,
+      };
+
+      // Add student to array
+      students.push(student);
+
+      // Update display
+      displayStudents();
+
+      // Clear input fields
+      document.getElementById("studentId").value = "";
+      document.getElementById("studentName").value = "";
+      document.getElementById("studentMarks").value = "";
+      document.getElementById("studentBranch").value = "";
+
+      alert("Student added successfully!");
+    }
+
+    // Delete Student
+
+    function deleteStudent(id) {
+      let index = -1;
+
+      for (let i = 0; i < students.length; i++) {
+        if (students[i].id === id) {
+          index = i;
+          break;
+        }
+      }
+
+      if (index === -1) {
+        alert("Student not found");
+        return;
+      }
+
+      students.splice(index, 1);
+
+      displayStudents();
+
+      alert("Student deleted successfully!");
+    }
+
+    // FIND STUDENT
+
+    function findStudent(name) {
+      for (let i = 0; i < students.length; i++) {
+        if (students[i].name.toLowerCase() === name.toLowerCase()) {
+          return students[i];
+        }
+      }
+
+      return null;
+    }
+
+    // Display Student
+
+    function displayStudents() {
+      let table = document.getElementById("studentTable");
+
+      // Clear existing table
+      table.innerHTML = "";
+
+      for (let i = 0; i < students.length; i++) {
+        let row = `
+            <tr>
+                <td>${students[i].id}</td>
+                <td>${students[i].name}</td>
+                <td>${students[i].marks}</td>
+                <td>${students[i].branch}</td>
+            </tr>
+        `;
+
+        table.innerHTML += row;
+      }
+
+      updateStatistics();
+    }
+
+    //Calculate Average
+
+    function calculateAverage() {
+      if (students.length === 0) {
+        return 0;
+      }
+
+      let total = 0;
+
+      for (let i = 0; i < students.length; i++) {
+        total += students[i].marks;
+      }
+
+      return total / students.length;
+    }
+
+    // Find Toper
+
+    function findTopper() {
+      if (students.length === 0) {
+        return null;
+      }
+
+      let highest = students[0].marks;
+      let topperName = students[0].name;
+
+      for (let i = 1; i < students.length; i++) {
+        if (students[i].marks > highest) {
+          highest = students[i].marks;
+          topperName = students[i].name;
+        }
+      }
+
+      return {
+        topperName: topperName,
+        highestMarks: highest,
+      };
+    }
+
+    // Update Stats
+
+    function updateStatistics() {
+      // Total students
+      document.getElementById("totalStudents").textContent = students.length;
+
+      // Average marks
+      let average = calculateAverage();
+
+      document.getElementById("averageMarks").textContent = average.toFixed(2);
+
+      // Topper
+      let topper = findTopper();
+
+      if (topper === null) {
+        document.getElementById("topper").textContent = "-";
+      } else {
+        document.getElementById("topper").textContent =
+          topper.topperName + " (" + topper.highestMarks + ")";
+      }
+    }
+
+    // Add Button
+
+    document.querySelector(".add-btn").addEventListener("click", function () {
+      addStudent();
+    });
+
+    // Delete Button
+
+    document
+      .querySelector(".delete-btn")
+      .addEventListener("click", function () {
+        let id = Number(document.getElementById("deleteId").value);
+
+        if (id === 0) {
+          alert("Enter a student ID");
+          return;
+        }
+
+        deleteStudent(id);
+
+        document.getElementById("deleteId").value = "";
+      });
+
+    // Find Button
+
+    document.querySelector(".find-btn").addEventListener("click", function () {
+      let name = document.getElementById("searchName").value;
+
+      if (name === "") {
+        alert("Enter a student name");
+        return;
+      }
+
+      let student = findStudent(name);
+
+      if (student === null) {
+        alert("Student not found");
+      } else {
+        alert(
+          "Student Found!\n\n" +
+            "ID: " +
+            student.id +
+            "\n" +
+            "Name: " +
+            student.name +
+            "\n" +
+            "Marks: " +
+            student.marks +
+            "\n" +
+            "Branch: " +
+            student.branch,
+        );
+      }
+    });
+  </script>
+</html>
